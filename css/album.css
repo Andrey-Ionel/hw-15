@@ -1,0 +1,24 @@
+.js-album-list {
+    list-style: none;
+    padding: 0;
+    font-weight: 500;
+    font-size: 18px; 
+}
+.album-list-item {
+    margin-bottom: 5px;
+    padding: 7px;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: rgba(2, 216, 113, 0.7);
+}
+.album-list-item:hover {
+    box-shadow: 0 3px 5px rgba(127, 160, 165, 0.5);
+}
+.album-heading {
+    border-bottom: 5px solid gray;
+    margin-bottom: 20px;
+}
+.album-photo {
+    margin: 0 2px 5px;
+    cursor: pointer;
+}
