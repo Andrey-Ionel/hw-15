@@ -11,18 +11,16 @@ const albumList = document.querySelector('.js-album-list');
 const albumPhotoForList = document.querySelector('.js-photo-container');
 
 init();
-createPhotoEventListener()
+createPhotoEventListener();
 
 function init() {
-    const promiseAlbumList = fetch('https://jsonplaceholder.typicode.com/albums');
+    const promiseAlbumList = sendGetAlbumListRequest();
     promiseAlbumList
-        .then((response) => response.json())
         .then((albumLists) => {
-            createAlbumlist(albumLists);
-            return fetch(`https://jsonplaceholder.typicode.com/photos?albumId=1`);
+            renderAlbumlist(albumLists);
+            return sendGetAlbumPhotoRequest(1);
         })
 
-        .then((response) => response.json())
         .then((albumInitPhoto) => renderAlbumPhoto(albumInitPhoto));
 }
 
@@ -32,19 +30,26 @@ function createPhotoEventListener() {
         if (event.target.classList.contains('album-list-item')) {
             const albumListItemId = event.target.dataset.id;
 
-            const promiseAlbumPhoto = fetch(`https://jsonplaceholder.typicode.com/photos?albumId=${albumListItemId}`);
+            const promiseAlbumPhoto = sendGetAlbumPhotoRequest(albumListItemId);
             promiseAlbumPhoto
-                .then((response) => response.json())
                 .then((albumEventPhoto) => renderAlbumPhoto(albumEventPhoto));
         }
 
     });
 }
 
-function createAlbumlist(albumLists) {
+function sendGetAlbumPhotoRequest(albumListItemId) {
+    return fetch(`https://jsonplaceholder.typicode.com/photos?albumId=${albumListItemId}`).then((response) => response.json());
+}
+
+function sendGetAlbumListRequest() {
+    return fetch('https://jsonplaceholder.typicode.com/albums').then((response) => response.json());
+}
+
+function renderAlbumlist(albumLists) {
     albumLists.map((list) => {
         const albumListItem = document.createElement('li');
-        albumListItem.className = 'album-list-item'
+        albumListItem.className = 'album-list-item';
         albumListItem.append(document.createTextNode(list.title));
         albumListItem.dataset.id = list.id;
         albumList.append(albumListItem);
@@ -56,7 +61,7 @@ function renderAlbumPhoto(albumPhoto) {
 
     albumPhoto.map((photo) => {
         const albumPhotoImg = document.createElement('img');
-        albumPhotoImg.className = 'album-photo'
+        albumPhotoImg.className = 'album-photo';
         albumPhotoImg.src = photo.thumbnailUrl;
         albumPhotoForList.append(albumPhotoImg);
     });
